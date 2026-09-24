@@ -1,18 +1,169 @@
-<html>
-  <title>OIMsomehthingsomething</title>
-  <head>
-    nothinginthebody
-    this is the first page of the OIMsomehthingsomething website.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Website</title>
 
-    <body>
-      i dont even know what is body
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-      this is the first page of the OIMsomehthingsomething website.
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #222;
+      background: #f5f5f5;
+    }
 
-      this is the second page of the webiste
-      
-      
-    </body>
-  </head>
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #1f2937;
+    }
+
+    .brand {
+      color: white;
+      text-decoration: none;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .menu-button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      background: #374151;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      gap: 12px;
+      padding-top: 16px;
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: #93c5fd;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tablet and desktop styles */
+    @media (min-width: 768px) {
+      .menu-button {
+        display: none;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        padding-top: 0;
+      }
+
+      .container {
+        flex-direction: row;
+      }
+
+      .card {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <a class="brand" href="#">My Website</a>
+
+    <button class="menu-button" aria-label="Open navigation menu" aria-expanded="false">
+      ☰
+    </button>
+
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1 id="home">Responsive Webpage</h1>
+
+    <div class="container">
+      <section class="card">
+        <h2 id="about">About</h2>
+        <p>
+          This page uses a mobile-first layout. On a phone, these sections stack
+          vertically. On a larger screen, they appear side by side.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Image</h2>
+        <img
+          src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=80"
+          alt="Landscape"
+        >
+      </section>
+
+      <section class="card">
+        <h2 id="contact">Contact</h2>
+        <p>Email: example@email.com</p>
+        <p>Phone: 123-456-7890</p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const menuButton = document.querySelector(".menu-button");
+    const navLinks = document.querySelector(".nav-links");
+
+    menuButton.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", isOpen);
+    });
+  </script>
+</body>
 </html>
-
