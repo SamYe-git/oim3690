@@ -3,47 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>hello</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Interests — Sam Ye</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#interests">Interests</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="brand" href="index.html">Sam Ye</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-me.html">About</a>
+        <a href="interests.html">Interests</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
 
   <main>
-    <h1>Welcome Welcome</h1>
-    <p>This is a simple HTML page.</p>
-    <p>Feel free to explore and modify the content!</p>
+    <section id="home">
+      <p class="eyebrow">Interests</p>
+      <h1>What I'm into</h1>
+      <p class="text-muted">
+        A running list of what keeps me busy outside of class — click each one
+        to read more.
+      </p>
+    </section>
 
     <section id="interests">
-      <h2>My Interests</h2>
-      <details>
+      <details class="interest" open>
+        <summary>Dogs (mostly Bagel)</summary>
+        <p>My dog Bagel is the reason my weekends have any structure at all. Walks, wrestling, and way too many treats.</p>
+      </details>
+      <details class="interest">
         <summary>Golf</summary>
-        <p>Working on my swing every weekend.</p>
+        <p>Working on my swing every weekend — it's a slow process, but I'm having fun with it.</p>
       </details>
-      <details>
+      <details class="interest">
         <summary>Snowboarding</summary>
-        <p>Hitting the slopes.</p>
+        <p>Hitting the slopes whenever I get the chance.</p>
       </details>
-      <details>
+      <details class="interest">
         <summary>Photography</summary>
-        <p>Capturing landscapes.</p>
+        <p>Capturing landscapes, mostly on my phone, wherever I end up.</p>
       </details>
-      <details>
+      <details class="interest">
         <summary>Road Trips</summary>
-        <p>Exploring new places.</p>
+        <p>Exploring new places, one drive at a time.</p>
       </details>
     </section>
   </main>
 
-  <footer id="contact">
-    <address>
-      Contact me at <a href="mailto:hello@example.com">hello@example.com</a>
-    </address>
-    <p>&copy; <time datetime="2026">2026</time> My Website</p>
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <p>Contact me at <a href="mailto:sye1@babson.edu">sye1@babson.edu</a></p>
+      <p>&copy; <time datetime="2026">2026</time> Sam Ye</p>
+    </div>
   </footer>
 </body>
 </html>
