@@ -1,0 +1,103 @@
+/* To-Do app styles — reuses color variables from styles.css */
+
+.todo-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.todo-form input[type="text"] {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--cream-dark);
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.todo-form input[type="text"]:focus-visible {
+  outline: 2px solid var(--forest-light);
+  outline-offset: 1px;
+}
+
+.todo-form button {
+  flex-shrink: 0;
+}
+
+.todo-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1px solid var(--cream-dark);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.todo-item input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--forest);
+  cursor: pointer;
+}
+
+.todo-item .todo-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.todo-item.completed {
+  border-left-color: var(--forest-light);
+}
+
+.todo-item.completed .todo-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.todo-item .todo-delete {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.todo-item .todo-delete:hover {
+  color: var(--accent-dark);
+}
+
+.todo-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.todo-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.todo-footer button {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  margin: 0;
+}

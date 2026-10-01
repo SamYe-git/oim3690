@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Sam Ye</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="brand" href="index.html">Sam Ye</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-me.html">About</a>
+        <a href="interests.html">Interests</a>
+        <a href="form-demo.html">Form Demo</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Contact Me</h1>
+      <p class="text-muted">
+        Fill out the form below and it will be sent to the class echo
+        endpoint so you can see exactly what gets submitted.
+      </p>
+    </section>
+
+    <section id="contact-form">
+      <form class="contact-form" action="https://oim.zhili.dev/echo/view" method="POST">
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required autocomplete="name">
+        </div>
+
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
+
+        <button class="button" type="submit">Send message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <p>Contact me at <a href="mailto:sye1@babson.edu">sye1@babson.edu</a></p>
+      <p>&copy; <time datetime="2026">2026</time> Sam Ye</p>
+    </div>
+  </footer>
+</body>
+</html>
