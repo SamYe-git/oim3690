@@ -1,4 +1,3 @@
-// Simple to-do list with localStorage persistence
 (function () {
   'use strict';
 
