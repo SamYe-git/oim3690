@@ -8,8 +8,10 @@
   const list = document.getElementById('todo-list');
   const countLabel = document.getElementById('todo-count');
   const clearCompletedBtn = document.getElementById('clear-completed');
+  const filterButtons = document.querySelectorAll('.filter-button');
 
   let todos = loadTodos();
+  let currentFilter = 'all';
 
   function loadTodos() {
     try {
@@ -34,7 +36,20 @@
       list.appendChild(empty);
     }
 
-    todos.forEach((todo) => {
+    const visibleTodos = todos.filter((todo) => {
+      if (currentFilter === 'open') return !todo.completed;
+      if (currentFilter === 'done') return todo.completed;
+      return true;
+    });
+
+    if (todos.length > 0 && visibleTodos.length === 0) {
+      const empty = document.createElement('li');
+      empty.className = 'todo-empty';
+      empty.textContent = currentFilter === 'done' ? 'No finished tasks yet.' : 'Nothing left to do!';
+      list.appendChild(empty);
+    }
+
+    visibleTodos.forEach((todo) => {
       const item = document.createElement('li');
       item.className = 'todo-item' + (todo.completed ? ' completed' : '');
 
@@ -100,6 +115,18 @@
   });
 
   clearCompletedBtn.addEventListener('click', clearCompleted);
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      currentFilter = button.dataset.filter;
+      filterButtons.forEach((b) => {
+        const isActive = b === button;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', String(isActive));
+      });
+      render();
+    });
+  });
 
   render();
 })();

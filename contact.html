@@ -34,12 +34,17 @@
       <form class="contact-form" action="https://oim.zhili.dev/echo/view" method="POST">
         <div class="form-row">
           <label for="name">Name</label>
-          <input type="text" id="name" name="name" required autocomplete="name">
+          <input type="text" id="name" name="name" required autocomplete="name" placeholder="Your name">
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com">
         </div>
 
         <div class="form-row">
           <label for="message">Message</label>
-          <textarea id="message" name="message" rows="6" required></textarea>
+          <textarea id="message" name="message" rows="6" required placeholder="What would you like to say?"></textarea>
         </div>
 
         <button class="button" type="submit">Send message</button>

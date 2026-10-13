@@ -101,3 +101,28 @@
   font-size: 0.85rem;
   margin: 0;
 }
+
+.todo-filters {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.todo-footer .filter-button {
+  background: none;
+  border: 1px solid var(--cream-dark);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.todo-footer .filter-button:hover {
+  border-color: var(--forest-light);
+  color: var(--forest);
+}
+
+.todo-footer .filter-button.active {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #fff;
+}
