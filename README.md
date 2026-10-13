@@ -1,4 +1,5 @@
 # oim3690
+
 ## about this course
 
 2. AI native
@@ -6,9 +7,6 @@
 
 This is the repo for all my classwork.
 
-```js
-const button = document.querySelector('#btn');
-button.addEventListener('click', () => {
-  alert('Hello!');
-});
+## Mini Project 1
 
+[View my Mini Project 1 client site](https://github.com/SamYe-git/mp1-client-site)
