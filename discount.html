@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discount Calculator | Sam Ye</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Discount-specific styles — reuses color variables from styles.css */
+    .discount input[type="number"] {
+      width: 100%;
+      max-width: 240px;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--cream-dark);
+      border-radius: 6px;
+      background: #fff;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .discount input:focus-visible {
+      outline: 2px solid var(--forest-light);
+      outline-offset: 1px;
+    }
+
+    .discount button {
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    #result {
+      margin-top: 1.5rem;
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--forest);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="brand" href="index.html">Sam Ye</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-me.html">About</a>
+        <a href="interests.html">Interests</a>
+        <a href="form-demo.html">Form Demo</a>
+        <a href="todo.html">To-Do</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="discount">
+      <h2>Discount Calculator</h2>
+
+      <div class="form-row">
+        <label for="total">Cart total ($)</label>
+        <input type="number" id="total" min="0" step="0.01" placeholder="Enter total">
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="member">
+        <label for="member">I'm a member</label>
+      </div>
+
+      <button id="calc-btn" class="button">Get Discount</button>
+
+      <p id="result"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>Contact me at <a href="mailto:sye1@babson.edu">sye1@babson.edu</a></p>
+      <p>&copy; <time datetime="2026">2026</time> Sam Ye</p>
+    </div>
+  </footer>
+
+  <script>
+    const totalInput = document.getElementById('total');
+    const memberCheckbox = document.getElementById('member');
+    const calcBtn = document.getElementById('calc-btn');
+    const result = document.getElementById('result');
+
+    // Returns the discount rate as a percentage
+    function getDiscount(total, isMember) {
+      if (isMember && total > 100) {
+        return 15;
+      } else if (!isMember && total > 150) {
+        return 10;
+      }
+      return 0;
+    }
+
+    function showDiscount() {
+      const total = parseFloat(totalInput.value);
+      if (isNaN(total)) {
+        result.textContent = 'Please enter a number.';
+        return;
+      }
+      const discount = getDiscount(total, memberCheckbox.checked);
+      result.textContent = `Discount: ${discount}%`;
+    }
+
+    calcBtn.addEventListener('click', showDiscount);
+  </script>
+</body>
+</html>
