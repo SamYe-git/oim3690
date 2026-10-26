@@ -10,16 +10,27 @@
   ];
 
   const playlist = document.getElementById('playlist');
+  const form = document.getElementById('song-form');
+  const input = document.getElementById('song-input');
 
   function render() {
     playlist.innerHTML = '';
 
-    songs.forEach((song) => {
-      const item = document.createElement('li');
-      item.textContent = `${song.title} — ${song.artist}`;
-      playlist.appendChild(item);
-    });
+    for (const song of songs) {
+      // TODO: create an <li> showing the song's title and artist, then append it to playlist
+    }
   }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    const [title, artist = 'Unknown'] = text.split(' - ').map((part) => part.trim());
+    songs.push({ title, artist });
+    input.value = '';
+    render();
+  });
 
   render();
 })();
