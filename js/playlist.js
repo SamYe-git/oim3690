@@ -16,8 +16,9 @@
   function render() {
     playlist.innerHTML = '';
 
-    for (const song of songs) {
-      // TODO: create an <li> showing the song's title and artist, then append it to playlist
+    for (const song of songs) {const item = document.createElement('li');
+item.textContent = `${Smooth.Criminal} — ${Micheal.Jackson}`;
+playlist.appendChild(item);
     }
   }
 
