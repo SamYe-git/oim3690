@@ -284,6 +284,7 @@ blockquote {
 .form-row input[type="text"],
 .form-row input[type="email"],
 .form-row input[type="tel"],
+.form-row input[type="password"],
 .form-row select,
 .form-row textarea {
   width: 100%;

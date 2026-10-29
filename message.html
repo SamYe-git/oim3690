@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Board | Sam Ye</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <a class="brand" href="index.html">Sam Ye</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about-me.html">About</a>
+        <a href="interests.html">Interests</a>
+        <a href="form-demo.html">Form Demo</a>
+        <a href="todo.html">To-Do</a>
+        <a href="playlist.html">Playlist</a>
+        <a href="message.html">Message Board</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="message-section">
+      <h2>Post to the Message Board</h2>
+
+      <form id="message-form" class="contact-form">
+        <div class="form-row">
+          <label for="token">Token</label>
+          <input type="password" id="token" autocomplete="off" required placeholder="Your X-Token">
+        </div>
+
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" rows="3" maxlength="140" required placeholder="Say hi (140 characters max)"></textarea>
+        </div>
+
+        <button type="submit" class="button">Send</button>
+        <p id="status" class="text-muted"></p>
+      </form>
+
+      <h3>Recent messages</h3>
+      <ul id="messages"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>Contact me at <a href="mailto:sye1@babson.edu">sye1@babson.edu</a></p>
+      <p>&copy; <time datetime="2026">2026</time> Sam Ye</p>
+    </div>
+  </footer>
+
+  <script src="js/post-message.js"></script>
+</body>
+</html>
