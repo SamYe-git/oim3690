@@ -17,7 +17,7 @@
     playlist.innerHTML = '';
 
     for (const song of songs) {const item = document.createElement('li');
-item.textContent = `${Smooth.Criminal} — ${Micheal.Jackson}`;
+item.textContent = `${song.title} — ${song.artist}`;
 playlist.appendChild(item);
     }
   }
