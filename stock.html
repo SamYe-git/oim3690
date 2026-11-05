@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Lookup | Sam Ye</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f7f7f5;
+      color: #222;
+    }
+
+    main {
+      max-width: 560px;
+      margin: 48px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #symbol {
+      text-transform: uppercase;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      background: #2f6fde;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover:not(:disabled) {
+      background: #2459b8;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .key-row {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .key-row input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    #status {
+      min-height: 1.5em;
+      color: #666;
+    }
+
+    #status.error {
+      color: #c0392b;
+    }
+
+    #result {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    #result h2 {
+      margin: 0;
+    }
+
+    .subtitle {
+      margin: 4px 0 16px;
+      color: #666;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .change.up {
+      color: #2e8b57;
+    }
+
+    .change.down {
+      color: #c0392b;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      margin: 16px 0 0;
+    }
+
+    dt {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    dd {
+      margin: 0 0 8px;
+      font-weight: 500;
+    }
+
+    .description {
+      margin-top: 16px;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Stock Lookup</h1>
+
+    <form id="stock-form">
+      <input id="symbol" type="text" placeholder="Ticker, e.g. IBM" value="IBM" required>
+      <button id="lookup-button" type="submit">Look up</button>
+    </form>
+
+    <label class="key-row">
+      Alpha Vantage API key (the "demo" key only works for IBM;
+      <a href="https://www.alphavantage.co/support/#api-key" target="_blank">get a free key</a>)
+      <input id="api-key" type="text" value="demo">
+    </label>
+
+    <p id="status" role="status"></p>
+    <section id="result" hidden></section>
+  </main>
+
+  <script>
+    const form = document.getElementById('stock-form');
+    const symbolInput = document.getElementById('symbol');
+    const keyInput = document.getElementById('api-key');
+    const button = document.getElementById('lookup-button');
+    const statusText = document.getElementById('status');
+    const result = document.getElementById('result');
+
+    // Remember the API key between visits
+    try {
+      const savedKey = localStorage.getItem('alphaVantageKey');
+      if (savedKey) keyInput.value = savedKey;
+    } catch (err) {
+      // localStorage can be blocked; the page still works without it
+    }
+
+    // Calls one Alpha Vantage function and returns the JSON
+    async function callApi(fn, symbol, key) {
+      const url = `https://www.alphavantage.co/query?function=${fn}&symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(key)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+
+      // Alpha Vantage sends errors as normal JSON with these fields
+      if (data.Note || data.Information) throw new Error(data.Note || data.Information);
+      if (data['Error Message']) throw new Error('Symbol not found.');
+      return data;
+    }
+
+    // Turns 3500000000 into "$3.50B"
+    function formatBig(value) {
+      const n = Number(value);
+      if (!n) return '—';
+      if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+      if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+      if (n >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
+      return `$${n.toLocaleString()}`;
+    }
+
+    // Shows "—" when a value is missing
+    function show(value) {
+      return value && value !== 'None' && value !== '-' ? value : '—';
+    }
+
+    async function lookUpStock(event) {
+      event.preventDefault();
+      const symbol = symbolInput.value.trim().toUpperCase();
+      const key = keyInput.value.trim() || 'demo';
+      if (!symbol) return;
+
+      try {
+        localStorage.setItem('alphaVantageKey', key);
+      } catch (err) {}
+
+      statusText.textContent = 'Loading...';
+      statusText.classList.remove('error');
+      button.disabled = true;
+      result.hidden = true;
+
+      try {
+        // Get the price and the company info at the same time
+        const [quoteData, overview] = await Promise.all([
+          callApi('GLOBAL_QUOTE', symbol, key),
+          callApi('OVERVIEW', symbol, key)
+        ]);
+
+        const quote = quoteData['Global Quote'];
+        if (!quote || !quote['05. price']) throw new Error(`No data found for "${symbol}".`);
+
+        const price = Number(quote['05. price']);
+        const change = Number(quote['09. change']);
+        const changePct = quote['10. change percent'];
+        const direction = change >= 0 ? 'up' : 'down';
+        const sign = change >= 0 ? '+' : '';
+
+        result.innerHTML = `
+          <h2>${show(overview.Name) === '—' ? symbol : overview.Name}</h2>
+          <p class="subtitle">${symbol} · ${show(overview.Exchange)} · ${show(overview.Sector)}</p>
+          <div class="price">$${price.toFixed(2)}</div>
+          <div class="change ${direction}">${sign}${change.toFixed(2)} (${sign}${parseFloat(changePct).toFixed(2)}%)</div>
+          <dl>
+            <div><dt>Open</dt><dd>$${Number(quote['02. open']).toFixed(2)}</dd></div>
+            <div><dt>Previous close</dt><dd>$${Number(quote['08. previous close']).toFixed(2)}</dd></div>
+            <div><dt>Day range</dt><dd>$${Number(quote['04. low']).toFixed(2)} – $${Number(quote['03. high']).toFixed(2)}</dd></div>
+            <div><dt>52-week range</dt><dd>$${show(overview['52WeekLow'])} – $${show(overview['52WeekHigh'])}</dd></div>
+            <div><dt>Volume</dt><dd>${Number(quote['06. volume']).toLocaleString()}</dd></div>
+            <div><dt>Market cap</dt><dd>${formatBig(overview.MarketCapitalization)}</dd></div>
+            <div><dt>P/E ratio</dt><dd>${show(overview.PERatio)}</dd></div>
+            <div><dt>Dividend yield</dt><dd>${Number(overview.DividendYield) ? (overview.DividendYield * 100).toFixed(2) + '%' : '—'}</dd></div>
+          </dl>
+          <p class="description"></p>
+        `;
+        // Set the description with textContent so it's never treated as HTML
+        result.querySelector('.description').textContent = overview.Description || '';
+        result.hidden = false;
+        statusText.textContent = `Latest trading day: ${quote['07. latest trading day']}`;
+      } catch (err) {
+        console.error(err);
+        statusText.textContent = err.message || "Couldn't fetch stock data. Check your connection.";
+        statusText.classList.add('error');
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', lookUpStock);
+  </script>
+</body>
+</html>
