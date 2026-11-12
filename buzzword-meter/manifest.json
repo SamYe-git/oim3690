@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Buzzword Meter",
+  "version": "1.0.0",
+  "description": "Highlights corporate buzzwords on any page and shows how buzzy it is.",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

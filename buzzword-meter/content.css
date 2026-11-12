@@ -1,0 +1,14 @@
+#buzzword-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147483647;
+  padding: 10px 16px;
+  background: #ffe066;
+  color: #222;
+  font: 600 16px/1.4 system-ui, -apple-system, sans-serif;
+  text-align: center;
+  border-bottom: 2px solid #f5c400;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
