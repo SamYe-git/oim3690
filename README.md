@@ -22,3 +22,7 @@ This is the repo for all my classwork.
 ## Class exercises
 
 - [Ask AI chat (live on Vercel)](https://oim3690.vercel.app/ai-chat.html): `ai-chat.html` sends my question to my own function in `api/ask.js`, which calls the model with the course key.
+
+## Lightning talks
+
+- [Your next website visitor might not be a human](lightning-talk.html): what OpenAI's Businesses in ChatGPT (Nov 2026) means for people who build websites. Use the arrow keys to move between slides, N for speaker notes, F for fullscreen. Live: https://oim3690.vercel.app/lightning-talk.html

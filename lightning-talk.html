@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Talk: Your Next Visitor Might Not Be a Human</title>
+  <style>
+    :root {
+      --forest: #1f3d2e;
+      --forest-light: #3d6b4f;
+      --cream: #faf5e9;
+      --cream-dark: #efe3cb;
+      --accent: #b1673f;
+      --accent-dark: #8a4d2e;
+      --text: #2a2a22;
+      --text-muted: #5c5a4d;
+      --font-heading: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #142a1f;
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--text);
+    }
+
+    /* Fixed 1280x720 stage, scaled to fit the window */
+    .deck {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1280px;
+      height: 720px;
+      transform-origin: center center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 72px 96px;
+      background: var(--cream);
+      display: none;
+      flex-direction: column;
+      border-radius: 6px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .slide.active { display: flex; }
+
+    .slide.dark {
+      background: var(--forest);
+      color: var(--cream);
+    }
+
+    .slide.dark h1, .slide.dark h2 { color: var(--cream); }
+
+    h1, h2, h3 {
+      font-family: var(--font-heading);
+      color: var(--forest);
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    h1 { font-size: 68px; }
+    h2 { font-size: 46px; margin-bottom: 36px; }
+    h3 { font-size: 28px; margin-bottom: 12px; }
+
+    p, li { font-size: 26px; line-height: 1.5; }
+
+    .eyebrow {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 18px;
+    }
+
+    .dark .eyebrow { color: #e3a57f; }
+
+    .muted { color: var(--text-muted); }
+    .dark .muted { color: #c9d4cc; }
+
+    .source {
+      margin-top: auto;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .dark .source { color: #a9b9ae; }
+
+    /* Title slide */
+    .title-slide { justify-content: center; }
+    .title-slide h1 { max-width: 980px; }
+    .title-slide .subtitle { font-size: 30px; margin: 28px 0 56px; color: #dfe6e0; max-width: 900px; }
+    .title-slide .byline { font-size: 20px; color: #e3a57f; letter-spacing: 0.05em; }
+
+    /* Big statement slides */
+    .statement { justify-content: center; }
+    .big-q { font-family: var(--font-heading); font-size: 64px; line-height: 1.2; margin: 0 0 48px; }
+    .stat { display: flex; align-items: baseline; gap: 24px; }
+    .stat .num { font-family: var(--font-heading); font-size: 120px; color: var(--accent); line-height: 1; }
+    .stat .label { font-size: 30px; }
+
+    /* Cards */
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+    .card {
+      background: #fff;
+      border: 2px solid var(--cream-dark);
+      border-top: 6px solid var(--forest-light);
+      border-radius: 10px;
+      padding: 32px 36px;
+    }
+    .card.accent { border-top-color: var(--accent); }
+    .card p { font-size: 23px; margin: 0 0 10px; }
+    .tag {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--cream-dark);
+      color: var(--forest);
+      margin-top: 8px;
+    }
+
+    /* Flow diagram */
+    .flow-row { display: flex; align-items: center; gap: 18px; margin-bottom: 30px; }
+    .flow-label { width: 150px; font-size: 20px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .node {
+      padding: 20px 28px;
+      border-radius: 10px;
+      font-size: 24px;
+      font-weight: 600;
+      background: #fff;
+      border: 2px solid var(--cream-dark);
+    }
+    .node.hl { background: var(--forest); color: var(--cream); border-color: var(--forest); }
+    .node.new { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .arrow { font-size: 32px; color: var(--text-muted); }
+    .takeaway {
+      margin-top: 20px;
+      padding: 24px 32px;
+      background: var(--cream-dark);
+      border-left: 6px solid var(--accent);
+      border-radius: 6px;
+      font-size: 28px;
+    }
+
+    /* Two-column with code */
+    .split { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: start; }
+    .split ul { margin: 0; padding-left: 28px; }
+    .split li { font-size: 24px; margin-bottom: 18px; }
+    pre {
+      margin: 0;
+      background: #1b2a22;
+      color: #e8efe9;
+      padding: 26px 30px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 1.55;
+      overflow: hidden;
+    }
+    .k { color: #e3a57f; }
+    .s { color: #a8d5b5; }
+    .c { color: #8a9a8f; }
+
+    /* Quote slide */
+    .quote {
+      font-family: var(--font-heading);
+      font-size: 44px;
+      line-height: 1.3;
+      color: var(--forest);
+      border-left: 8px solid var(--accent);
+      padding-left: 36px;
+      margin: 24px 0 0;
+      max-width: 1000px;
+    }
+
+    /* Checklist */
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .grid3 .card p { font-size: 21px; }
+
+    /* Sources */
+    .sources li { font-size: 18px; margin-bottom: 8px; }
+    .sources a { color: #e3a57f; }
+
+    /* UI chrome */
+    .progress {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 5px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .counter {
+      position: fixed;
+      right: 18px;
+      bottom: 14px;
+      font-size: 14px;
+      color: #a9b9ae;
+      font-family: var(--font-body);
+    }
+    .notes {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 34vh;
+      overflow-y: auto;
+      background: rgba(15, 30, 22, 0.96);
+      color: #e8efe9;
+      font-size: 17px;
+      line-height: 1.55;
+      padding: 18px 28px 28px;
+      display: none;
+      z-index: 10;
+    }
+    .notes.show { display: block; }
+    .notes strong { color: #e3a57f; }
+    .hint {
+      position: fixed;
+      left: 18px;
+      bottom: 14px;
+      font-size: 13px;
+      color: #7f9486;
+    }
+    aside.speaker { display: none; }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide dark title-slide">
+      <p class="eyebrow">OIM3690 Lightning Talk</p>
+      <h1>Your next website visitor might not be a human.</h1>
+      <p class="subtitle">What OpenAI's "Businesses in ChatGPT" means for people who build websites.</p>
+      <p class="byline">Sam Ye &middot; November 2026</p>
+      <aside class="speaker">Hi everyone. Today I want to talk about something OpenAI launched nine days ago, and why I think it matters for all of us who have spent this semester building websites.</aside>
+    </section>
+
+    <!-- 2. Hook -->
+    <section class="slide statement">
+      <p class="eyebrow">Quick poll</p>
+      <p class="big-q">When you want to buy something, do you still Google it, or do you ask ChatGPT?</p>
+      <div class="stat">
+        <span class="num">1.2B</span>
+        <span class="label">people use ChatGPT every week</span>
+      </div>
+      <p class="source">Source: OpenAI, "Introducing Businesses in ChatGPT," Nov 10, 2026</p>
+      <aside class="speaker">Raise your hand if you've asked ChatGPT for a product recommendation in the last month. (Pause.) That's the shift. OpenAI says 1.2 billion people use ChatGPT each week, and businesses want to be part of those conversations.</aside>
+    </section>
+
+    <!-- 3. What launched -->
+    <section class="slide">
+      <p class="eyebrow">What launched &middot; Nov 10, 2026 &middot; Beta</p>
+      <h2>Businesses in ChatGPT has two parts</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Business Hub</h3>
+          <p>Claim and verify your business profile.</p>
+          <p>Upload product feeds with price and availability.</p>
+          <p>See aggregated mentions, views, and website clicks from ChatGPT.</p>
+          <span class="tag">Global, where ChatGPT is available</span>
+        </div>
+        <div class="card accent">
+          <h3>Business Agents</h3>
+          <p>A brand's own AI agent that answers customer questions inside ChatGPT.</p>
+          <p>Clearly labeled and kept separate from your main chat.</p>
+          <span class="tag">US e-commerce &amp; online services only</span>
+        </div>
+      </div>
+      <p class="source">Both free at launch. Shopify merchants can connect through Business Hub or the Shopify admin.</p>
+      <aside class="speaker">There are two pieces. Business Hub is the management layer: a business claims its profile, verifies it, and keeps its info and product feeds up to date. It also shows how often the business shows up in ChatGPT. Business Agents go a step further: the brand gets its own AI rep that customers can chat with inside ChatGPT. Right now agents are limited to eligible US e-commerce and online service businesses.</aside>
+    </section>
+
+    <!-- 4. The shift -->
+    <section class="slide">
+      <p class="eyebrow">The shift</p>
+      <h2>The customer journey is getting a new front door</h2>
+      <div class="flow-row">
+        <span class="flow-label">Before</span>
+        <span class="node">Google search</span><span class="arrow">&rarr;</span>
+        <span class="node hl">Your website</span><span class="arrow">&rarr;</span>
+        <span class="node">Checkout</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label">Now</span>
+        <span class="node">Ask ChatGPT</span><span class="arrow">&rarr;</span>
+        <span class="node new">Brand agent</span><span class="arrow">&rarr;</span>
+        <span class="node">Checkout</span>
+      </div>
+      <p class="takeaway">Your website goes from being the <strong>destination</strong> to being the <strong>data source</strong>.</p>
+      <aside class="speaker">Here's the part I think matters for us. The old path was: search, land on the website, buy. In the new path, the customer might never visit the website at all. ChatGPT reads the business's data and the agent does the talking. So the website stops being the place people go, and becomes the place AI learns from.</aside>
+    </section>
+
+    <!-- 5. Why web devs should care -->
+    <section class="slide">
+      <p class="eyebrow">Why this matters for us</p>
+      <h2>From SEO to GEO</h2>
+      <div class="split">
+        <ul>
+          <li><strong>SEO</strong> asked: can Google rank my page?</li>
+          <li><strong>GEO</strong> (Generative Engine Optimization) asks: can an AI understand and describe my business correctly?</li>
+          <li>Clean, structured data matters more than pretty layouts here.</li>
+          <li>Business Hub even shows which topics your site appears in.</li>
+        </ul>
+<pre><span class="c">&lt;!-- schema.org product data --&gt;</span>
+<span class="k">&lt;script</span> type=<span class="s">"application/ld+json"</span><span class="k">&gt;</span>
+{
+  <span class="s">"@context"</span>: <span class="s">"https://schema.org"</span>,
+  <span class="s">"@type"</span>: <span class="s">"Product"</span>,
+  <span class="s">"name"</span>: <span class="s">"Tiepi Fengdou"</span>,
+  <span class="s">"description"</span>: <span class="s">"Dendrobium herbal supplement"</span>,
+  <span class="s">"brand"</span>: { <span class="s">"@type"</span>: <span class="s">"Brand"</span>, <span class="s">"name"</span>: <span class="s">"Senyu"</span> },
+  <span class="s">"offers"</span>: {
+    <span class="s">"@type"</span>: <span class="s">"Offer"</span>,
+    <span class="s">"price"</span>: <span class="s">"39.00"</span>,
+    <span class="s">"priceCurrency"</span>: <span class="s">"USD"</span>,
+    <span class="s">"availability"</span>: <span class="s">"https://schema.org/InStock"</span>
+  }
+}
+<span class="k">&lt;/script&gt;</span></pre>
+      </div>
+      <p class="source">Sample markup for illustration; the price is a placeholder.</p>
+      <aside class="speaker">For web developers this changes the job a little. SEO was about getting Google to rank your page. People now talk about GEO: making sure AI can understand and describe your business correctly. A big part of that is structured data like this JSON-LD block. It's invisible to visitors, but it tells machines exactly what the product is, what it costs, and whether it's in stock. It's the same idea as the product feeds in Business Hub.</aside>
+    </section>
+
+    <!-- 6. Personal example -->
+    <section class="slide statement">
+      <p class="eyebrow">A real example</p>
+      <h2>My family's business sells a Chinese herbal supplement</h2>
+      <p class="muted">A year ago, reaching US customers meant a Shopify site plus Google ads. Today I'd add one more question:</p>
+      <p class="quote">"How does ChatGPT describe our product, and do we control that answer?"</p>
+      <aside class="speaker">To make this concrete: my family runs a business selling Tiepi Fengdou, a Chinese herbal supplement. If we wanted to sell in the US, the playbook used to be a good website and Google ads. Now I'd also want to know what ChatGPT says when someone asks about dendrobium supplements, and whether we have any control over that answer. Business Hub is OpenAI's first real answer to that question.</aside>
+    </section>
+
+    <!-- 7. Catches -->
+    <section class="slide">
+      <p class="eyebrow">The catches</p>
+      <h2>It's early, and it raises questions</h2>
+      <div class="grid3">
+        <div class="card">
+          <h3>Limited</h3>
+          <p>It's a beta. Agents are US-only and only for eligible e-commerce and online service businesses.</p>
+        </div>
+        <div class="card">
+          <h3>Privacy</h3>
+          <p>OpenAI says businesses don't see your chats. Insights are aggregated and only appear above a usage threshold.</p>
+        </div>
+        <div class="card accent">
+          <h3>Ads</h3>
+          <p>Businesses can sponsor their agent as a ChatGPT ad destination. Labeled, but is the answer still neutral?</p>
+        </div>
+      </div>
+      <aside class="speaker">A few catches. First, it's a beta and the agents are narrow for now. Second, privacy: OpenAI says businesses can't read your conversations, they only get aggregated numbers. Third, and this is the interesting one: businesses can pay to sponsor their agent as the destination for ChatGPT ads. Those are labeled, but it raises a real question about whether AI answers stay neutral once money is involved.</aside>
+    </section>
+
+    <!-- 8. Close -->
+    <section class="slide dark statement">
+      <p class="eyebrow">One question to leave you with</p>
+      <p class="big-q">We spent this semester building websites for humans. Should we start building them for AI too?</p>
+      <ul class="sources">
+        <li><a href="https://openai.com/index/introducing-businesses-chatgpt/" target="_blank" rel="noopener">OpenAI: Introducing Businesses in ChatGPT</a></li>
+        <li><a href="https://itbrief.co.uk/story/openai-launches-chatgpt-business-hub-for-companies" target="_blank" rel="noopener">IT Brief: OpenAI launches ChatGPT Business Hub for companies</a></li>
+        <li><a href="https://schema.org/Product" target="_blank" rel="noopener">schema.org: Product</a></li>
+      </ul>
+      <aside class="speaker">So I'll leave you with this. All semester we've designed for people: layouts, colors, buttons. Maybe the next skill is designing for the AI that sits between our site and the people we want to reach. Thanks!</aside>
+    </section>
+
+  </div>
+
+  <div class="progress" id="progress"></div>
+  <div class="counter" id="counter"></div>
+  <div class="hint">&larr; &rarr; to navigate &middot; N for notes &middot; F for fullscreen</div>
+  <div class="notes" id="notes"></div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const deck = document.getElementById("deck");
+    const progress = document.getElementById("progress");
+    const counter = document.getElementById("counter");
+    const notes = document.getElementById("notes");
+    let current = 0;
+
+    function fit() {
+      const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720) * 0.96;
+      deck.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+    }
+
+    function show(i) {
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, idx) => s.classList.toggle("active", idx === current));
+      progress.style.width = ((current + 1) / slides.length) * 100 + "%";
+      counter.textContent = (current + 1) + " / " + slides.length;
+      const speaker = slides[current].querySelector("aside.speaker");
+      notes.innerHTML = "<strong>Notes:</strong> " + (speaker ? speaker.innerHTML : "");
+      history.replaceState(null, "", "#" + (current + 1));
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); show(current + 1); }
+      else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); show(current - 1); }
+      else if (e.key === "Home") show(0);
+      else if (e.key === "End") show(slides.length - 1);
+      else if (e.key === "n" || e.key === "N") notes.classList.toggle("show");
+      else if (e.key === "f" || e.key === "F") {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+      }
+    });
+
+    deck.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;
+      const rect = deck.getBoundingClientRect();
+      show(e.clientX < rect.left + rect.width / 3 ? current - 1 : current + 1);
+    });
+
+    window.addEventListener("resize", fit);
+    fit();
+    const start = parseInt(location.hash.slice(1), 10);
+    show(Number.isNaN(start) ? 0 : start - 1);
+  </script>
+</body>
+</html>
